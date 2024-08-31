@@ -510,6 +510,35 @@ ReactDOM.render(
 );
 
 
+  # auth.js 
+
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
+const SECRET_KEY = 'your_secret_key'; // Use environment variables for this
+
+// Generate JWT token
+const generateToken = (user) => {
+  return jwt.sign({ id: user.user_id, username: user.username }, SECRET_KEY, { expiresIn: '1h' });
+};
+
+// Verify JWT token middleware
+const authenticateToken = (req, res, next) => {
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1];
+
+  if (token == null) return res.sendStatus(401); // No token provided
+
+  jwt.verify(token, SECRET_KEY, (err, user) => {
+    if (err) return res.sendStatus(403); // Invalid token
+    req.user = user;
+    next();
+  });
+};
+
+module.exports = { generateToken, authenticateToken };
+
+
+
     
 
 
