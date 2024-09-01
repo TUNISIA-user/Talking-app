@@ -541,6 +541,26 @@ module.exports = { generateToken, authenticateToken };
 
 
 
+// this token jwt
+
+
+const jwt = require('jsonwebtoken');
+
+app.post('/login', async (req, res) => {
+    // After verifying user credentials
+    const token = jwt.sign({ _id: user._id }, 'your_jwt_secret', { expiresIn: '1h' });
+    res.status(200).json({ token });
+});
+
+
+const handleLogin = async () => {
+    const response = await axios.post('/login', { email, password });
+    const token = response.data.token;
+    localStorage.setItem('authToken', token);
+};
+
+
+
     
 
 
